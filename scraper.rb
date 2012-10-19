@@ -3,32 +3,28 @@ class Scraper
   require 'open-uri'
   require_relative 'job_database'
   
-  attr_accessor :source, :index_url, :index_doc, :job_urls, :title_selector, :company_selector,
+  attr_accessor :source, :index_url, :index_doc, :job_url_collection, :base_url_for_job, :title_selector, :company_selector,
                 :location_selector, :type_selector, :job_database
 
-  def initialize(source, index_url, job_database)
-    @source       = source
-    @index_url    = index_url
-    @job_database = job_database
-    @index_doc    = Nokogiri::HTML(open(self.index_url))
+  def initialize(source, index_url, base_url_for_job, job_database)
+    @source           = source
+    @index_url        = index_url
+    @base_url_for_job = base_url_for_job
+    @job_database     = job_database
+    @index_doc        = Nokogiri::HTML(open(self.index_url))
   end
 
-  def compile_job_urls(job_selector)
-    self.job_urls = self.index_doc.css(job_selector).map do |link| 
-      "#{self.index_url}#{link['href']}"
+  def compile_job_url_collection(job_selector)
+    self.job_url_collection = self.index_doc.css(job_selector).slice(0..10).map do |link| 
+      "#{self.base_url_for_job}#{link['href']}"
     end
-    self.job_urls.pop(90) if self.source == "Ruby Inside"
   end
 
   def scrape_away(args)
-    self.job_urls.each do |job_url|
+    self.job_url_collection.each do |job_url|
       job_doc = Nokogiri::HTML(open(job_url))
-      if self.source == "Ruby Now"
-        title, company = job_doc.css(args[:title_selector]).inner_text.strip.split(" at ")
-      else
-        title = job_doc.css(args[:title_selector]).inner_text.strip
-        company = job_doc.css(args[:company_selector]).inner_text.strip
-      end
+      title = job_doc.css(args[:title_selector]).inner_text.strip
+      company = job_doc.css(args[:company_selector]).inner_text.strip
       source = self.source
       job_url = job_url.strip
       location = job_doc.css(args[:location_selector]).inner_text.strip
