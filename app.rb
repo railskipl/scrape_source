@@ -7,9 +7,9 @@ job_database = JobDatabase.new
 
 
 time = Benchmark.measure do
+  
   ruby_inside = Scraper.new('Ruby Inside', 'http://ruby.jobamatic.com/a/jbb/find-jobs/', 
                             'http://ruby.jobamatic.com', job_database)
-
   ruby_inside.compile_job_url_collection('tr.listing td.title a')
   ruby_inside.scrape_away({
     :title_selector => 'h2.jam_headline',
@@ -19,10 +19,8 @@ time = Benchmark.measure do
     :description_selector => 'div#c_job_description'
   })
 
-
   ruby_now = Scraper.new('Ruby Now', 'http://jobs.rubynow.com/', 
                          'http://jobs.rubynow.com', job_database)
-
   ruby_now.compile_job_url_collection('ul.jobs li h2 a:first')
   ruby_now.scrape_away({
     :title_selector => 'h2#headline',
@@ -31,5 +29,7 @@ time = Benchmark.measure do
     :job_selector => 'strong:last',
     :description_selector => 'div#info'
   })
+
 end
+
 puts time
