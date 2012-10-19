@@ -1,5 +1,6 @@
 require_relative 'scraper'
 require_relative 'job_database'
+require 'benchmark'
 
 JobDatabase.drop_database
 job_database = JobDatabase.new

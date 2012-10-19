@@ -21,15 +21,9 @@ class Scraper
   end
 
   def scrape_away(args)
-    queue = Queue.new
-    producer = Thread.new do
-      self.job_url_collection.each do |job_url|
-        queue << job_url
-      end
-    end
-
-    consumer = Thread.new do
-        job_url = queue.pop
+    threads = []
+    self.job_url_collection.each do |job_url|
+      threads << Thread.new do
         job_doc     = Nokogiri::HTML(open(job_url))
         title       = job_doc.css(args[:title_selector]).inner_text.strip
         company     = job_doc.css(args[:company_selector]).inner_text.strip
@@ -41,6 +35,8 @@ class Scraper
         description = job_doc.css(args[:description_selector]).inner_text.strip
 
         self.job_database.insert_row([title, source, job_url, company, location, job_type, telecommute, description])
+      end
     end
+    threads.each(&:join)
   end
 end
