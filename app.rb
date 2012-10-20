@@ -5,7 +5,6 @@ require 'benchmark'
 JobDatabase.drop_database
 job_database = JobDatabase.new
 
-
 time = Benchmark.measure do
   
   ruby_inside = Scraper.new('Ruby Inside', 'http://ruby.jobamatic.com/a/jbb/find-jobs/', 
