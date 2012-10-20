@@ -3,8 +3,7 @@ class Scraper
   require 'open-uri'
   require_relative 'job_database'
   
-  attr_accessor :source, :index_url, :index_doc, :job_url_collection, :base_url_for_job, :title_selector, :company_selector,
-                :location_selector, :type_selector, :job_database
+  attr_accessor :source, :index_url, :index_doc, :job_url_collection, :base_url_for_job, :job_database
 
   def initialize(source, index_url, base_url_for_job, job_database)
     @source           = source
