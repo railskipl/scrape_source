@@ -22,20 +22,17 @@ class Scraper
   def scrape_away(args)
     threads = []
     self.job_url_collection.each do |job_url|
-      threads << Thread.new do
-        job_doc     = Nokogiri::HTML(open(job_url))
-        title       = job_doc.css(args[:title_selector]).inner_text.strip
-        company     = job_doc.css(args[:company_selector]).inner_text.strip
-        source      = self.source
-        job_url     = job_url.strip
-        location    = job_doc.css(args[:location_selector]).inner_text.strip
-        job_type    = job_doc.css(args[:job_selector]).inner_text.strip
-        telecommute = "Empty for now"
-        description = job_doc.css(args[:description_selector]).inner_text.strip
+      vals, columns, markers = [], [], []
+      job_doc       = Nokogiri::HTML(open(job_url))
+    
+      args.each do |key, value|
+        column, type = key.to_s.split("_")
+        columns << column
+        vals << job_doc.css(value).send(type.to_sym).strip || "blank"
+        markers = 1.upto(columns.length).map {|n| '?' }.join(",")
+      end      
 
-        self.job_database.insert_row([title, source, job_url, company, location, job_type, telecommute, description])
-      end
+      self.job_database.insert_record(columns, markers, vals)
     end
-    threads.each(&:join)
   end
 end
