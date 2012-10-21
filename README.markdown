@@ -37,8 +37,4 @@ That's it!
 
 ## Anatomy of a scraper
 
-1. Visit an index page
-2. Grab all of the URLs you want
-3. Visit each of the URLs
-4. Select the information you want
-5. Write to database
+[http://kcurtin.github.com/blog/2012/10/17/the-anatomy-of-a-scraper/](http://kcurtin.github.com/blog/2012/10/17/the-anatomy-of-a-scraper/)
