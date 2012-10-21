@@ -5,8 +5,16 @@ class JobDatabase
 
   def initialize
     @database = SQLite3::Database.new "job_database.db"
+  end
 
-    rows = @database.execute <<-SQL
+  def insert_record(columns, markers, args)
+    sql = "INSERT INTO jobs (#{columns.join(",")}) VALUES (#{markers});"
+    self.database.execute(sql, [args])
+  end
+
+  def self.create_database
+    @database = SQLite3::Database.new "job_database.db"
+    @database.execute <<-SQL
       create table jobs (
         id INTEGER PRIMARY KEY,
         title VARCHAR(255),
@@ -19,16 +27,6 @@ class JobDatabase
         description text
       );
     SQL
-  end
-
-  def insert_row(*args)
-    self.database.execute("INSERT INTO jobs (title, source, job_url, company, location, job_type, telecommute, description) 
-                                            VALUES (?, ?, ?, ?, ?, ?, ?, ?);", [args])
-  end
-
-  def insert_record(columns, markers, args)
-    sql = "INSERT INTO jobs (#{columns.join(",")}) VALUES (#{markers});"
-    self.database.execute(sql, [args])
   end
 
   def self.drop_database

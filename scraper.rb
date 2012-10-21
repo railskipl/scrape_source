@@ -1,7 +1,6 @@
 class Scraper
   require 'nokogiri'
   require 'open-uri'
-  require_relative 'job_database'
   
   attr_accessor :source, :index_url, :index_doc, :job_url_collection, :base_url_for_job, :job_database
 
@@ -21,17 +20,17 @@ class Scraper
 
   def scrape_away(args)
     self.job_url_collection.each do |job_url|
-      vals, columns, markers = [], [], []
-      job_doc       = Nokogiri::HTML(open(job_url))
+      values, columns, markers = [], [], []
+      job_doc  = Nokogiri::HTML(open(job_url))
     
-      args.each do |key, value|
-        column, type = key.to_s.split("_")
-        columns << column
-        vals << job_doc.css(value).send(type.to_sym).strip || "blank"
-        markers = 1.upto(columns.length).map {|n| '?' }.join(",")
+      args.each do |key, selector|
+        column_name, option = key.to_s.split("_")
+        columns << column_name
+        values << job_doc.css(selector).send(option.to_sym).strip
+        markers = Array.new(columns.size, "?").join(",")
       end      
 
-      self.job_database.insert_record(columns, markers, vals)
+      self.job_database.insert_record(columns, markers, values)
     end
   end
 end

@@ -3,6 +3,7 @@ require_relative 'job_database'
 require 'benchmark'
 
 JobDatabase.drop_database
+JobDatabase.create_database
 job_database = JobDatabase.new
 
 time = Benchmark.measure do
@@ -18,16 +19,16 @@ time = Benchmark.measure do
     description_text: 'div#c_job_description'
   })
 
-  # ruby_now = Scraper.new('Ruby Now', 'http://jobs.rubynow.com/', 
-  #                        'http://jobs.rubynow.com', job_database)
-  # ruby_now.compile_job_url_collection('ul.jobs li h2 a:first')
-  # ruby_now.scrape_away({
-  #   :title_selector => 'h2#headline',
-  #   :company_selector => 'h2#headline a',
-  #   :location_selector => 'h3#location',
-  #   :job_selector => 'strong:last',
-  #   :description_selector => 'div#info'
-  # })
+  ruby_now = Scraper.new('Ruby Now', 'http://jobs.rubynow.com/', 
+                         'http://jobs.rubynow.com', job_database)
+  ruby_now.compile_job_url_collection('ul.jobs li h2 a:first')
+  ruby_now.scrape_away({
+    :title_text => 'h2#headline',
+    :company_text => 'h2#headline a',
+    :location_text => 'h3#location',
+    :type_text => 'strong:last',
+    :description_text => 'div#info'
+  })
 
 end
 
