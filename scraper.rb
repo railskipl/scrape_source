@@ -20,7 +20,6 @@ class Scraper
   end
 
   def scrape_away(args)
-    threads = []
     self.job_url_collection.each do |job_url|
       vals, columns, markers = [], [], []
       job_doc       = Nokogiri::HTML(open(job_url))
