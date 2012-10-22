@@ -12,6 +12,12 @@ class JobDatabase
     self.database.execute(sql, [args])
   end
 
+  def all_rows(table)
+    sql = "SELECT * FROM #{table}"
+    self.database.results_as_hash = true
+    self.database.execute(sql)
+  end
+
   def self.create_database
     @database = SQLite3::Database.new "job_database.db"
     @database.execute <<-SQL
@@ -19,8 +25,8 @@ class JobDatabase
         id INTEGER PRIMARY KEY,
         title VARCHAR(255),
         source VARCHAR(255),
-        job_url VARCHAR(255),
-        company VARCHAR(255),
+        link VARCHAR(255),
+        company_id INT,
         location VARCHAR(255),
         type VARCHAR(255),
         telecommute BOOLEAN,
