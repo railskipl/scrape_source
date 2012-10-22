@@ -7,6 +7,11 @@ class JobDatabase
     @database = SQLite3::Database.new "job_database.db"
   end
 
+  def find_jobs_by_company_id(company_id)
+    sql = "SELECT * FROM jobs WHERE company_id = (?)"
+    @database.execute(sql, [company_id])
+  end
+
   def insert_record(columns, markers, args)
     sql = "INSERT INTO jobs (#{columns.join(",")}) VALUES (#{markers});"
     self.database.execute(sql, [args])

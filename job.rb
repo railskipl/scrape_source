@@ -12,6 +12,7 @@ class Job
     results.map { |result| Job.new(result.first(9)) }
   end
 
+
   def save
     db = JobDatabase.new
     columns = self.instance_variables.map do |var|
