@@ -57,7 +57,10 @@ describe Company do
     company = Company.new
     company.id = 1
     jobs = company.jobs
-    assert_equal [1,1], [sample_job2.company_id, sample_job.company_id]
+    # assert_equal [1,1], [sample_job2.company_id, sample_job.company_id]
+    assert_equal jobs, [sample_job, sample_job2]
   end
+
+
 
 end

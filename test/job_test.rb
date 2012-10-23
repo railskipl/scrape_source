@@ -64,6 +64,12 @@ describe Job do
     assert_equal Job.all.count, 1
   end
 
+  it "should find jobs from the database using the job ID" do
+    job = Job.new(:id => 10, :description => "Job #10")
+    job.save
+    assert_equal Job.find(10), job
+  end
+
 
 
   # it "should save alinklink record to the database" do

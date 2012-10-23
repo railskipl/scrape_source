@@ -5,23 +5,23 @@ class JobDatabase
 
   def initialize
     @database = SQLite3::Database.new "job_database.db"
+    self.database.results_as_hash = true
+  end
+
+  def find_obj_by_id(id, table)
+    @database.execute("SELECT * FROM #{table} WHERE id = (?)", id).first
   end
 
   def find_jobs_by_company_id(company_id)
-    self.database.results_as_hash = true
-    sql = "SELECT * FROM jobs WHERE company_id = (?)"
-    @database.execute(sql, [company_id])
+    @database.execute("SELECT * FROM jobs WHERE company_id = (?)", [company_id])
   end
 
   def insert_record(columns, markers, args)
-    sql = "INSERT INTO jobs (#{columns.join(",")}) VALUES (#{markers});"
-    self.database.execute(sql, [args])
+    self.database.execute("INSERT INTO jobs (#{columns.join(",")}) VALUES (#{markers});", [args])
   end
 
   def all_rows(table)
-    sql = "SELECT * FROM #{table}"
-    self.database.results_as_hash = true
-    self.database.execute(sql)
+    self.database.execute("SELECT * FROM #{table}")
   end
 
   def self.create_database

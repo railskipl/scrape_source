@@ -7,9 +7,18 @@ class Job
     end
   end
 
+  def ==(job_instance)
+    self.id == job_instance.id
+  end
+
   def self.all
     results = JobDatabase.new.all_rows('jobs')
     results.map { |result| Job.new(result.first(9)) }
+  end
+
+  def self.find(id)
+    result = JobDatabase.new.find_obj_by_id(id, "jobs")
+    Job.new(result.first(9))
   end
 
 
