@@ -1,4 +1,4 @@
-class JobDatabase
+class Database
   require 'sqlite3'
 
   attr_accessor :database
@@ -16,8 +16,9 @@ class JobDatabase
     @database.execute("SELECT * FROM jobs WHERE company_id = (?)", [company_id])
   end
 
-  def insert_record(columns, markers, args)
-    self.database.execute("INSERT INTO jobs (#{columns.join(",")}) VALUES (#{markers});", [args])
+  def insert_record(columns, args, table)
+    markers = Array.new(columns.size, "?").join(",")
+    self.database.execute("INSERT INTO #{table} (#{columns.join(",")}) VALUES (#{markers});", [args])
   end
 
   def all_rows(table)
@@ -26,6 +27,11 @@ class JobDatabase
 
   def self.create_database
     @database = SQLite3::Database.new "job_database.db"
+    create_jobs_table
+    create_companies_table
+  end
+
+  def self.create_jobs_table
     @database.execute <<-SQL
       create table jobs (
         id INTEGER PRIMARY KEY,
@@ -37,6 +43,17 @@ class JobDatabase
         type VARCHAR(255),
         telecommute BOOLEAN,
         description text
+      );
+    SQL
+  end
+
+  def self.create_companies_table
+    @database.execute <<-SQL
+      create table companies (
+        id INTEGER PRIMARY KEY,
+        name VARCHAR(255),
+        link VARCHAR(255),
+        description TEXT
       );
     SQL
   end

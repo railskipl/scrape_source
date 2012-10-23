@@ -12,26 +12,25 @@ class Job
   end
 
   def self.all
-    results = JobDatabase.new.all_rows('jobs')
+    results = Database.new.all_rows('jobs')
     results.map { |result| Job.new(result.first(9)) }
   end
 
   def self.find(id)
-    result = JobDatabase.new.find_obj_by_id(id, "jobs")
+    result = Database.new.find_obj_by_id(id, "jobs")
     Job.new(result.first(9))
   end
 
 
   def save
-    db = JobDatabase.new
+    db = Database.new
     columns = self.instance_variables.map do |var|
       var.to_s.sub("@", "")
     end
-    markers = Array.new(columns.size, "?").join(",")
     args = columns.map do |col|
       self.send(col.to_sym)
     end
-    db.insert_record(columns, markers, args)
+    db.insert_record(columns, args, "jobs")
   end
 
 

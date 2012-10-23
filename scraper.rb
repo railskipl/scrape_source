@@ -30,7 +30,7 @@ class Scraper
         markers = Array.new(columns.size, "?").join(",")
       end      
 
-      self.job_database.insert_record(columns, markers, values)
+      self.job_database.insert_record(columns, values, "jobs")
     end
   end
 end

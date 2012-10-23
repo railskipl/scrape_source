@@ -1,13 +1,13 @@
 require 'minitest/spec'
 require 'minitest/autorun'
 require_relative '../job'
-require_relative '../job_database'
+require_relative '../database'
 
 describe Job do
 
   before(:each) do
-    JobDatabase.drop_database
-    JobDatabase.create_database
+    Database.drop_database
+    Database.create_database
   end
 
   it "exists" do
@@ -52,9 +52,9 @@ describe Job do
   it "#all should return all records in the database" do
     job = Job.new(:id => 1, :description => "My desc")
     job2 = Job.new(:id => 2, :title => "my title")
-    db = JobDatabase.new
-    db.insert_record(['title'],'?', [job2.title])
-    db.insert_record(['description'],'?', [job.description])
+    db = Database.new
+    db.insert_record(['title'], [job2.title], "jobs")
+    db.insert_record(['description'], [job.description], "jobs")
     assert_equal Job.all.count, 2
   end
 

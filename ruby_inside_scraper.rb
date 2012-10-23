@@ -2,8 +2,8 @@ require 'nokogiri'
 require 'open-uri'
 require_relative 'job_database'
 
-JobDatabase.drop_database
-job_database = JobDatabase.new
+Database.drop_database
+job_database = Database.new
 
 index_url = 'http://ruby.jobamatic.com/a/jbb/find-jobs'
 job_index_doc = Nokogiri::HTML(open(index_url))

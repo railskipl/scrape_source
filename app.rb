@@ -1,10 +1,10 @@
 require_relative 'scraper'
-require_relative 'job_database'
+require_relative 'database'
 require 'benchmark'
 
-JobDatabase.drop_database
-JobDatabase.create_database
-job_database = JobDatabase.new
+Database.drop_database
+Database.create_database
+job_database = Database.new
 
 time = Benchmark.measure do
   
