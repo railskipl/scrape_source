@@ -18,6 +18,11 @@ class JobDatabase
     self.database.execute(sql)
   end
 
+  def find_job_by_company_id(company_id)
+    sql = "SELECT * FROM jobs WHERE company_id = (?)"
+
+  end
+
   def self.create_database
     @database = SQLite3::Database.new "job_database.db"
     @database.execute <<-SQL

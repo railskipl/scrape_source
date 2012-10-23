@@ -4,6 +4,7 @@ require_relative '../job'
 require_relative '../job_database'
 
 describe Job do
+
   it "exists" do
     Job.new.must_be_instance_of Job
   end
