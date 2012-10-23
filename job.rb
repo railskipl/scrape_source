@@ -1,5 +1,8 @@
+require_relative 'flatiron'
+
 class Job
-  attr_accessor :id, :location, :link, :title, :description, :company_id, :source, :type, :telecommute
+  include Flatiron
+  attr_accessor :id, :location, :link, :title, :description, :company_id, :source, :type, :telecommute, :table
 
   def initialize(args={})
     args.each do |key, value|
@@ -7,31 +10,26 @@ class Job
     end
   end
 
-  def ==(job_instance)
-    self.id == job_instance.id
+  def self.table
+    @@table ||= "jobs"
   end
 
-  def self.all
-    results = Database.new.all_rows('jobs')
-    results.map { |result| Job.new(result.first(9)) }
+  def ==(other_instance)
+    self.id == other_instance.id
   end
-
-  def self.find(id)
-    result = Database.new.find_obj_by_id(id, "jobs")
-    Job.new(result.first(9))
-  end
-
 
   def save
-    db = Database.new
     columns = self.instance_variables.map do |var|
       var.to_s.sub("@", "")
     end
     args = columns.map do |col|
       self.send(col.to_sym)
     end
-    db.insert_record(columns, args, "jobs")
+    Database.new.insert_record(columns, args, "jobs")
   end
 
-
+  def self.find(id)
+    result = Database.new.find_obj_by_id(id, "jobs")
+    Job.new(result.first(9))
+  end
 end

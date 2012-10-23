@@ -73,7 +73,7 @@ describe Company do
     db = Database.new
     db.insert_record(['name'], [company2.name], "companies")
     db.insert_record(['description'], [company.description], "companies")
-    assert_equal Company.all.count, 2
+    assert_equal Company.all, [company, company2]
   end
 
   # it "should find jobs from the database using the job ID" do
