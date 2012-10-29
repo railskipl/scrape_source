@@ -1,3 +1,5 @@
+require_relative 'job'
+
 class Scraper
   require 'nokogiri'
   require 'open-uri'
@@ -20,17 +22,14 @@ class Scraper
 
   def scrape_away(args)
     self.job_url_collection.each do |job_url|
-      values, columns, markers = [], [], []
       job_doc  = Nokogiri::HTML(open(job_url))
-    
-      args.each do |key, selector|
-        column_name, option = key.to_s.split("_")
-        columns << column_name
-        values << job_doc.css(selector).send(option.to_sym).strip
-        markers = Array.new(columns.size, "?").join(",")
-      end      
 
-      self.job_database.insert_record(columns, values, "jobs")
+      job_hash = args.each_with_object({}) do |(key, selector), attrs|
+        var_name, option = key.to_s.split("_")
+        attrs[var_name.to_sym] = job_doc.css(selector).send(option.to_sym).strip
+      end
+
+      Job.new(job_hash).save
     end
   end
 end
