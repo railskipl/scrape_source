@@ -26,7 +26,7 @@ class Scraper
 
       job_hash = args.each_with_object({}) do |(key, selector), attrs|
         var_name, option = key.to_s.split("_")
-        attrs[var_name.to_sym] = job_doc.css(selector).send(option.to_sym).strip
+        attrs[var_name] = job_doc.css(selector).send(option).strip
       end
 
       Job.new(job_hash).save

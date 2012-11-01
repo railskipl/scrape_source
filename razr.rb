@@ -17,7 +17,7 @@ module Razr
 
     def initialize(args={})
       args.each do |key, value|
-        self.send("#{key.to_sym}=", value)
+        self.send("#{key}=", value)
       end
     end
 
@@ -30,7 +30,7 @@ module Razr
         var.to_s.sub("@", "")
       end
       args = columns.map do |col|
-        self.send(col.to_sym)
+        self.send(col)
       end
       Database.new.insert_record(columns, args, self.class.table)
     end    
